@@ -22,14 +22,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.cache.configuration.MutableConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.samples.petclinic.system.metering.MeteringProperties;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Cache configuration intended for caches providing the JCache API. This configuration
  * creates the used cache for the application and enables statistics that become
  * accessible via JMX.
+ *
+ * <p>
+ * Also activates Spring scheduling (for the SAP Unified Metering monthly flush job) and
+ * binds the {@link org.springframework.samples.petclinic.system.metering.MeteringProperties}
+ * configuration properties without introducing a separate setup component.
+ * </p>
  */
 @Configuration(proxyBeanMethods = false)
 @EnableCaching
+@EnableScheduling
+@EnableConfigurationProperties(MeteringProperties.class)
 class CacheConfiguration {
 
 	@Bean

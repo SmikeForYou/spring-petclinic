@@ -51,3 +51,11 @@ CREATE TABLE IF NOT EXISTS visits (
   description TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_visits_pet_id ON visits (pet_id);
+CREATE TABLE IF NOT EXISTS metering_monthly_request_count (
+  id              BIGSERIAL PRIMARY KEY,
+  year_bucket     INT NOT NULL,
+  month_bucket    INT NOT NULL,
+  count           BIGINT NOT NULL DEFAULT 0,
+  last_flushed_at TIMESTAMP NULL,
+  CONSTRAINT uk_metering_month UNIQUE (year_bucket, month_bucket)
+);
