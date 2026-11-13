@@ -54,3 +54,11 @@ CREATE TABLE IF NOT EXISTS visits (
   description VARCHAR(255),
   FOREIGN KEY (pet_id) REFERENCES pets(id)
 ) engine=InnoDB;
+CREATE TABLE IF NOT EXISTS metering_monthly_request_count (
+  id              BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  year_bucket     INT NOT NULL,
+  month_bucket    INT NOT NULL,
+  count           BIGINT NOT NULL DEFAULT 0,
+  last_flushed_at DATETIME NULL,
+  UNIQUE KEY uk_metering_month (year_bucket, month_bucket)
+) engine=InnoDB;
