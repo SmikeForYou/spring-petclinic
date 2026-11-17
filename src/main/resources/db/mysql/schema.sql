@@ -54,3 +54,8 @@ CREATE TABLE IF NOT EXISTS visits (
   description VARCHAR(255),
   FOREIGN KEY (pet_id) REFERENCES pets(id)
 ) engine=InnoDB;
+CREATE TABLE IF NOT EXISTS metered_visitor (
+  month      CHAR(7) NOT NULL,
+  visitor_id VARCHAR(64) NOT NULL,
+  PRIMARY KEY (month, visitor_id)
+) engine=InnoDB;

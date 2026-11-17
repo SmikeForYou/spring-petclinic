@@ -9,20 +9,17 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.util.Locale;
+import org.springframework.samples.petclinic.metering.MeteringInterceptor;
 
-/**
- * Configures internationalization (i18n) support for the application.
- *
- * <p>
- * Handles loading language-specific messages, tracking the user's language, and allowing
- * language changes via the URL parameter (e.g., <code>?lang=de</code>).
- * </p>
- *
- * @author Anuj Ashok Potdar
- */
 @Configuration
 @SuppressWarnings("unused")
 public class WebConfiguration implements WebMvcConfigurer {
+
+	private final MeteringInterceptor meteringInterceptor;
+
+	public WebConfiguration(MeteringInterceptor meteringInterceptor) {
+		this.meteringInterceptor = meteringInterceptor;
+	}
 
 	/**
 	 * Uses session storage to remember the user’s language setting across requests.
@@ -49,12 +46,18 @@ public class WebConfiguration implements WebMvcConfigurer {
 	}
 
 	/**
-	 * Registers the locale change interceptor so it can run on each request.
+	 * Registers the locale change interceptor and the Unified Metering interceptor so
+	 * they run on each inbound DispatcherServlet request. Outbound {@code RestClient}
+	 * invocations do not pass through here.
 	 * @param registry where interceptors are added
 	 */
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(localeChangeInterceptor());
+		registry.addInterceptor(this.meteringInterceptor)
+			.addPathPatterns("/**")
+			.excludePathPatterns("/actuator/**", "/webjars/**", "/resources/**", "/css/**", "/js/**", "/images/**",
+					"/fonts/**", "/oups");
 	}
 
 }
